@@ -146,6 +146,19 @@ usersdb.eventsByLocation = (location) => {
 };
 
 
+usersdb.eventsByDate = (data) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM events where ? >= start_date and ? <= end_date`, [data.startDate, data.endDate], (err, results) => {
+            if (err) {
+                console.log("error:", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    });
+};
+
+
 
 usersdb.eventsByUser = (userID) => {
     return new Promise((resolve, reject) => {

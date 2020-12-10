@@ -68,6 +68,18 @@ router.get('/events/:location', async (req, res, next) => {
     }
 });
 
+router.get('/events/:startDate/:endDate', async (req, res, next) => {
+
+    try {
+        let results = await db.eventsByDate(req.params);
+        console.log(results);
+        res.json(results);
+    } catch (err) {
+        console.error(err)
+        res.sendStatus(500)
+    }
+});
+
 // router.get('/events/:id', async (req, res, next) => {
 
 //     try {
@@ -92,7 +104,7 @@ router.get('/events/adminEvents/:adminUsername', async (req, res, next) => {
 
 });
 
-router.get('/events/userEvents/:username', async (req, res, next) => {
+router.get('/events/userEvents/user/:username', async (req, res, next) => {
 
     try {
         let results = await db.eventsByUser(req.params.username);
@@ -130,6 +142,7 @@ router.post('/joinEvent', async (req, res, next) => {
     }
 
 });
+
 
 
 router.post('/events/createEvent', async (req, res, next) => {
