@@ -32,6 +32,21 @@ usersdb.usersOne = (id) => {
             return resolve(results);
         });
     });
+
+
+};
+usersdb.login = (username) => {
+    return new Promise((resolve, reject) => {
+        returnObj = {}
+        pool.query(`SELECT * FROM users WHERE user_name = ?`, [username], (err, results) => {
+            if (err) {
+                console.log("error:", err);
+                return reject(err);
+            }
+            returnObj["data"] = results
+            return resolve(returnObj);
+        });
+    });
 };
 
 usersdb.addUser = (data) => {
@@ -48,10 +63,27 @@ usersdb.addUser = (data) => {
     });
 };
 
+
 usersdb.addEvent = (data) => {
     return new Promise((resolve, reject) => {
         pool.query(`INSERT INTO events (event_title, admin_username, admin_id, event_description, homepage_url, location, start_date, end_date)values(?,?,?,?,?,?,?,?)`,
             [data.eventTitle, data.adminname, data.adminid, data.eventDesc, data.eventUrl, data.eventCity, data.startdate, data.enddate], (err, results) => {
+                if (err) {
+                    console.log("error:", err);
+                    return reject(err);
+                }
+                console.log("added event successfully")
+                console.log("results", results)
+                return resolve(results);
+            });
+    });
+};
+
+
+usersdb.joinEvent = (data) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`INSERT INTO user_events(admin_id, event_id, user_id)values(?,?,?)`,
+            [data.adminid, data.eventid, data.userid], (err, results) => {
                 if (err) {
                     console.log("error:", err);
                     return reject(err);
@@ -97,7 +129,23 @@ usersdb.eventsByAdmin = (adminID) => {
             return resolve(results);
         });
     });
+
 };
+
+
+usersdb.eventsByLocation = (location) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM events WHERE location = ?`, [location], (err, results) => {
+            if (err) {
+                console.log("error:", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    });
+};
+
+
 
 usersdb.eventsByUser = (userID) => {
     return new Promise((resolve, reject) => {
